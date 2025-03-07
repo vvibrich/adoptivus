@@ -24,6 +24,10 @@ type Pet = {
   state: string;
   created_at: string;
   contact_whatsapp: string;
+  is_litter: boolean;
+  litter_size?: number;
+  males_count?: number;
+  females_count?: number;
 };
 
 export default function PetsPage() {
@@ -168,7 +172,7 @@ export default function PetsPage() {
           <p className="mt-2 text-gray-500">Seja o primeiro a doar um pet!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {pets.map((pet) => (
             <Card key={pet.id} className="flex flex-col h-full">
               {pet.image_url && (
@@ -183,6 +187,23 @@ export default function PetsPage() {
               <CardContent className="p-4 flex-grow">
                 <h2 className="text-xl font-semibold mb-2">{pet.name}</h2>
                 {pet.breed && <p className="text-gray-600 mb-2">{pet.breed}</p>}
+                {pet.is_litter ? (
+                <div className="mb-6">
+                  <h2 className="text-md font-semibold mb-3 dark:text-white">Informações da Ninhada</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-gray-50 p-3 rounded">
+                      <p className="text-sm dark:text-black font-medium">Total de filhotes</p>
+                      <p className="text-xl font-medium text-sm text-gray-600">{pet.litter_size}</p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded">
+                      <p className="text-sm dark:text-black font-medium">Disponíveis</p>
+                      <p className="text-lg font-medium text-gray-600">
+                        {pet.males_count} machos, {pet.females_count} fêmeas
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
                 <p className="text-sm text-gray-500 line-clamp-3">{pet.description}</p>
                 <p className="text-sm text-gray-500 mt-2">
                   {pet.city}, {pet.state}
