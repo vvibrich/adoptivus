@@ -91,7 +91,7 @@ export default async function PetPage({ params }: { params: { id: string } }) {
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="grid md:grid-cols-2 gap-6">
             {pet.image_url && (
-              <div className="aspect-square relative">
+              <div className="aspect-square relative w-full h-full">
                 <img
                   src={pet.image_url}
                   alt={pet.name}
@@ -102,7 +102,7 @@ export default async function PetPage({ params }: { params: { id: string } }) {
 
             <div className="p-6">
               <div className="mb-6">
-                <h1 className="text-3xl font-bold mb-2">{pet.name}</h1>
+                <h1 className="text-3xl font-bold mb-2 text-gray-600">{pet.name}</h1>
                 <p className="text-lg text-gray-600 mb-2">
                   {speciesMap[pet.species]}
                   {pet.breed && ` • ${pet.breed}`}
@@ -112,15 +112,15 @@ export default async function PetPage({ params }: { params: { id: string } }) {
 
               {pet.is_litter ? (
                 <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-3">Informações da Ninhada</h2>
+                  <h2 className="text-xl font-semibold mb-3 text-gray-600">Informações da Ninhada</h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-gray-50 p-3 rounded">
                       <p className="text-sm text-gray-600">Total de filhotes</p>
-                      <p className="text-lg font-medium">{pet.litter_size}</p>
+                      <p className="text-xl font-medium text-sm text-gray-600">{pet.litter_size}</p>
                     </div>
                     <div className="bg-gray-50 p-3 rounded">
                       <p className="text-sm text-gray-600">Disponíveis</p>
-                      <p className="text-lg font-medium">
+                      <p className="text-lg font-medium text-gray-600">
                         {pet.males_count} machos, {pet.females_count} fêmeas
                       </p>
                     </div>
@@ -129,13 +129,13 @@ export default async function PetPage({ params }: { params: { id: string } }) {
               ) : null}
 
               <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-3">Sobre</h2>
+                <h2 className="text-xl font-semibold mb-3 text-gray-600">Sobre</h2>
                 <p className="text-gray-600 whitespace-pre-wrap">{pet.description}</p>
               </div>
 
               {pet.birth_date && (
                 <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-3">Data de Nascimento</h2>
+                  <h2 className="text-xl font-semibold mb-3 text-gray-600">Data de Nascimento</h2>
                   <p className="text-gray-600">
                     {new Date(pet.birth_date).toLocaleDateString("pt-BR")}
                   </p>
@@ -143,7 +143,7 @@ export default async function PetPage({ params }: { params: { id: string } }) {
               )}
 
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                <Button className="w-full" size="lg">
+                <Button className="w-full bg-primary text-secondary" size="lg">
                   Entrar em Contato
                 </Button>
               </a>
