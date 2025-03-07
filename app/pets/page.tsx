@@ -187,9 +187,12 @@ export default function PetsPage() {
                   {pet.city}, {pet.state}
                 </p>
               </CardContent>
-              <CardFooter className="p-4 pt-0">
-                <Link href={`/pets/${pet.id}`} className="w-full">
+              <CardFooter className="flex justify-center p-4 pt-0">
+                {/* <Link href={`/pets/${pet.id}`} className="w-full mr-2">
                   <Button className="w-full">Ver Detalhes</Button>
+                </Link> */}
+                <Link href={`https://wa.me/55${pet.contact_whatsapp}`} className="w-full m-2">
+                  <Button className="w-full">Entrar em contato</Button>
                 </Link>
               </CardFooter>
             </Card>
