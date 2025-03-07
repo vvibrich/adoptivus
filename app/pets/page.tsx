@@ -23,6 +23,7 @@ type Pet = {
   city: string;
   state: string;
   created_at: string;
+  contact_whatsapp: string;
 };
 
 export default function PetsPage() {
