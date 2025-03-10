@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PawPrint, User, Heart } from "lucide-react";
+import { PawPrint, User, Heart, DoorClosed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -64,7 +64,7 @@ export function Navbar() {
                 <DropdownMenu>
                   <DropdownMenuTrigger className="focus:outline-none">
                     <Avatar className="h-8 w-8 bg-primary text-primary-foreground">
-                      <AvatarFallback>
+                      <AvatarFallback className="dark:text-white text-black">
                         {getUserInitial(user.email)}
                       </AvatarFallback>
                     </Avatar>
@@ -87,7 +87,8 @@ export function Navbar() {
                         Perfil
                       </DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem onClick={handleSignOut}>
+                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-400">
+                      <DoorClosed className="mr-2 h4 w-4" />
                       Sair
                     </DropdownMenuItem>
                   </DropdownMenuContent>
