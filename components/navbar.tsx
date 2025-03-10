@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PawPrint, User } from "lucide-react";
+import { PawPrint, User, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -75,10 +75,18 @@ export function Navbar() {
                         Doar Pet
                       </DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem onClick={() => router.push("/profile")}>
-                      <User className="mr-2 h-4 w-4" />
-                      Perfil
-                    </DropdownMenuItem>
+                    <Link href="/my-pets">
+                      <DropdownMenuItem>
+                        <Heart className="mr-2 h-4 w-4" />
+                        Meus Pets
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/profile">
+                      <DropdownMenuItem>
+                        <User className="mr-2 h-4 w-4" />
+                        Perfil
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem onClick={handleSignOut}>
                       Sair
                     </DropdownMenuItem>

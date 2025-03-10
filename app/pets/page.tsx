@@ -66,6 +66,8 @@ export default function PetsPage() {
         let query = supabase
           .from('pets')
           .select('*')
+          .eq('status', 'available')
+          .is('deleted_at', null)
           .order('created_at', { ascending: false });
 
         if (selectedState && selectedState !== "all") {
