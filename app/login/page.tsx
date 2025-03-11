@@ -112,10 +112,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container py-8">
+    <div className="container py-24 lg:ml-28 mx-5">
       <div className="max-w-md mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Entrar</h1>
-
+        <div className="bg-card p-4 sm:p-6 rounded-lg border text-center">
+        <h1 className="text-2xl font-bold mb-8">Bem-vindo de volta!</h1>
         <Button
           variant="outline"
           className="w-full mb-6"
@@ -154,7 +154,7 @@ export default function LoginPage() {
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-left">
             <FormField
               control={form.control}
               name="email"
@@ -205,7 +205,7 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-
+        </div>
         <ProfileCompletionModal 
           isOpen={showProfileModal} 
           onComplete={handleProfileComplete} 
