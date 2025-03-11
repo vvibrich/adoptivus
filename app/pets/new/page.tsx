@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { MaskedInput } from "@/components/ui/masked-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -50,7 +51,7 @@ const petFormSchema = z.object({
 export default function NewPetPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const [imageUrl, setImageUrl] = useState("");
+  const [photos, setPhotos] = useState<{ file: File; preview: string }[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [userPhone, setUserPhone] = useState("");
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -62,7 +63,7 @@ export default function NewPetPage() {
         const { data: profile } = await supabase
           .from("profiles")
           .select("phone, city, state")
-          .eq("id", user.id)
+          .eq("user_id", user.id)
           .single();
 
         if (profile) {
@@ -95,46 +96,62 @@ export default function NewPetPage() {
     },
   });
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
 
-    setIsUploading(true);
-    const file = e.target.files[0];
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `${fileName}`;
+    const newPhotos = Array.from(e.target.files).map(file => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
 
-    try {
-      const { error: uploadError } = await supabase.storage
+    setPhotos(prev => [...prev, ...newPhotos]);
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => {
+      const newPhotos = [...prev];
+      URL.revokeObjectURL(newPhotos[index].preview);
+      newPhotos.splice(index, 1);
+      return newPhotos;
+    });
+  };
+
+  async function uploadPhotos(petId: string) {
+    const uploadedPhotos = [];
+
+    for (let i = 0; i < photos.length; i++) {
+      const { file } = photos[i];
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError, data } = await supabase.storage
         .from("pets")
         .upload(filePath, file);
 
-      if (uploadError) {
-        throw uploadError;
-      }
+      if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
         .from("pets")
         .getPublicUrl(filePath);
 
-      setImageUrl(publicUrl);
-      toast({
-        title: "Imagem enviada com sucesso!",
-        description: "A imagem do pet foi carregada.",
+      uploadedPhotos.push({
+        pet_id: petId,
+        url: publicUrl,
+        order: i
       });
-    } catch (error) {
-      toast({
-        title: "Erro ao enviar imagem",
-        description: "Ocorreu um erro ao enviar a imagem. Tente novamente.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsUploading(false);
     }
+
+    const { error: insertError } = await supabase
+      .from("pet_photos")
+      .insert(uploadedPhotos);
+
+    if (insertError) throw insertError;
   }
 
   async function onSubmit(values: z.infer<typeof petFormSchema>) {
     try {
+      setIsUploading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Usuário não autenticado");
 
@@ -148,14 +165,21 @@ export default function NewPetPage() {
         return;
       }
 
-      const { error } = await supabase.from("pets").insert({
-        ...values,
-        image_url: imageUrl,
-        contact_whatsapp,
-        user_id: user.id,
-      });
+      const { data: pet, error: petError } = await supabase
+        .from("pets")
+        .insert({
+          ...values,
+          contact_whatsapp,
+          user_id: user.id,
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (petError) throw petError;
+
+      if (photos.length > 0) {
+        await uploadPhotos(pet.id);
+      }
 
       toast({
         title: "Pet cadastrado com sucesso!",
@@ -169,6 +193,8 @@ export default function NewPetPage() {
         description: "Ocorreu um erro ao cadastrar o pet. Tente novamente.",
         variant: "destructive",
       });
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -422,21 +448,34 @@ export default function NewPetPage() {
               )}
 
               <div className="space-y-4">
-                <FormLabel>Foto do Pet</FormLabel>
+                <FormLabel>Fotos do Pet</FormLabel>
                 <Input
                   type="file"
                   accept="image/*"
-                  onChange={handleImageUpload}
+                  onChange={handlePhotoSelect}
                   disabled={isUploading}
                   className="cursor-pointer"
+                  multiple
                 />
-                {imageUrl && (
-                  <div className="relative aspect-square w-full max-w-[200px] mx-auto sm:mx-0">
-                    <img
-                      src={imageUrl}
-                      alt="Preview"
-                      className="rounded-lg object-cover w-full h-full"
-                    />
+                {photos.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {photos.map((photo, index) => (
+                      <div key={index} className="relative aspect-square">
+                        <img
+                          src={photo.preview}
+                          alt={`Preview ${index + 1}`}
+                          className="rounded-lg object-cover w-full h-full"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2 h-6 w-6"
+                          onClick={() => removePhoto(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

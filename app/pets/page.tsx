@@ -4,14 +4,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -21,13 +13,21 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { states } from "@/lib/states";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Pet = {
   id: string;
   name: string;
   breed?: string;
   description: string;
-  image_url?: string;
   city: string;
   state: string;
   created_at: string;
@@ -41,13 +41,25 @@ type Pet = {
   birth_date?: string;
 };
 
+type PetPhoto = {
+  id: string;
+  pet_id: string;
+  url: string;
+  order: number;
+};
+
+type PetWithPhotos = Pet & {
+  photos: PetPhoto[];
+  currentPhotoIndex: number;
+};
+
 export default function PetsPage() {
-  const [pets, setPets] = useState<Pet[]>([]);
+  const [pets, setPets] = useState<PetWithPhotos[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedState, setSelectedState] = useState<string | undefined>();
   const [cityFilter, setCityFilter] = useState<string | undefined>();
   const [cities, setCities] = useState<string[]>([]);
-  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
+  const [selectedPet, setSelectedPet] = useState<PetWithPhotos | null>(null);
 
   useEffect(() => {
     async function fetchCities() {
@@ -92,10 +104,28 @@ export default function PetsPage() {
           query = query.eq('city', cityFilter);
         }
 
-        const { data, error } = await query;
+        const { data: petsData, error: petsError } = await query;
 
-        if (error) throw error;
-        setPets(data || []);
+        if (petsError) throw petsError;
+
+        // Fetch photos for all pets
+        const petsWithPhotos = await Promise.all((petsData || []).map(async (pet) => {
+          const { data: photos, error: photosError } = await supabase
+            .from('pet_photos')
+            .select('*')
+            .eq('pet_id', pet.id)
+            .order('order');
+
+          if (photosError) throw photosError;
+
+          return {
+            ...pet,
+            photos: photos || [],
+            currentPhotoIndex: 0,
+          };
+        }));
+
+        setPets(petsWithPhotos);
       } catch (error) {
         console.error('Error fetching pets:', error);
         setPets([]);
@@ -113,6 +143,58 @@ export default function PetsPage() {
 
   const handleCityChange = (value: string) => {
     setCityFilter(value === "all" ? undefined : value);
+  };
+
+  const nextPhoto = (petId: string) => {
+    setPets(prev => prev.map(p => {
+      if (p.id === petId) {
+        const newIndex = p.currentPhotoIndex === p.photos.length - 1 ? 0 : p.currentPhotoIndex + 1;
+        return { ...p, currentPhotoIndex: newIndex };
+      }
+      return p;
+    }));
+
+    if (selectedPet?.id === petId) {
+      setSelectedPet(prev => {
+        if (!prev) return null;
+        const newIndex = prev.currentPhotoIndex === prev.photos.length - 1 ? 0 : prev.currentPhotoIndex + 1;
+        return { ...prev, currentPhotoIndex: newIndex };
+      });
+    }
+  };
+
+  const previousPhoto = (petId: string) => {
+    setPets(prev => prev.map(p => {
+      if (p.id === petId) {
+        const newIndex = p.currentPhotoIndex === 0 ? p.photos.length - 1 : p.currentPhotoIndex - 1;
+        return { ...p, currentPhotoIndex: newIndex };
+      }
+      return p;
+    }));
+
+    if (selectedPet?.id === petId) {
+      setSelectedPet(prev => {
+        if (!prev) return null;
+        const newIndex = prev.currentPhotoIndex === 0 ? prev.photos.length - 1 : prev.currentPhotoIndex - 1;
+        return { ...prev, currentPhotoIndex: newIndex };
+      });
+    }
+  };
+
+  const handlePhotoClick = (petId: string, index: number) => {
+    setPets(prev => prev.map(p => {
+      if (p.id === petId) {
+        return { ...p, currentPhotoIndex: index };
+      }
+      return p;
+    }));
+
+    if (selectedPet?.id === petId) {
+      setSelectedPet(prev => {
+        if (!prev) return null;
+        return { ...prev, currentPhotoIndex: index };
+      });
+    }
   };
 
   const speciesMap = {
@@ -210,13 +292,55 @@ export default function PetsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
             {pets.map((pet) => (
               <Card key={pet.id} className="flex flex-col h-full">
-                {pet.image_url && (
+                {pet.photos.length > 0 && (
                   <div className="aspect-square relative">
                     <img
-                      src={pet.image_url}
+                      src={pet.photos[pet.currentPhotoIndex].url}
                       alt={pet.name}
                       className="object-cover w-full h-full rounded-t-lg"
                     />
+                    {pet.photos.length > 1 && (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-background/80 hover:bg-background"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            previousPhoto(pet.id);
+                          }}
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-background/80 hover:bg-background"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            nextPhoto(pet.id);
+                          }}
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                          {pet.photos.map((_, index) => (
+                            <button
+                              key={index}
+                              className={`w-2 h-2 rounded-full transition-colors ${
+                                index === pet.currentPhotoIndex
+                                  ? "bg-primary"
+                                  : "bg-primary/30"
+                              }`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handlePhotoClick(pet.id, index);
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
                 <CardContent className="p-4 flex-grow">
@@ -248,13 +372,46 @@ export default function PetsPage() {
                   <DialogTitle className="text-2xl">{selectedPet.name}</DialogTitle>
                 </DialogHeader>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {selectedPet.image_url && (
+                  {selectedPet.photos.length > 0 && (
                     <div className="aspect-square relative">
                       <img
-                        src={selectedPet.image_url}
+                        src={selectedPet.photos[selectedPet.currentPhotoIndex].url}
                         alt={selectedPet.name}
                         className="object-cover w-full h-full rounded-lg"
                       />
+                      {selectedPet.photos.length > 1 && (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-background/80 hover:bg-background"
+                            onClick={() => previousPhoto(selectedPet.id)}
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-background/80 hover:bg-background"
+                            onClick={() => nextPhoto(selectedPet.id)}
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                            {selectedPet.photos.map((_, index) => (
+                              <button
+                                key={index}
+                                className={`w-2 h-2 rounded-full transition-colors ${
+                                  index === selectedPet.currentPhotoIndex
+                                    ? "bg-primary"
+                                    : "bg-primary/30"
+                                }`}
+                                onClick={() => handlePhotoClick(selectedPet.id, index)}
+                              />
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
                   <div>
