@@ -95,22 +95,24 @@ export default function ProfilePage() {
 
       const cleanPhone = values.phone.replace(/\D/g, "");
 
-      console.log("Dados do perfil a serem salvos:", {
-        ...values,
-        phone: cleanPhone,
-        updated_at: new Date().toISOString(),
-      });
+      // console.log("Dados do perfil a serem salvos:", {
+      //   ...values,
+      //   id: user.id,
+      //   phone: cleanPhone,
+      //   updated_at: new Date().toISOString(),
+      // });
 
       const { error, status } = await supabase
         .from("profiles")
         .upsert({
           ...values,
+          id: user.id,
           phone: cleanPhone,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", user.id);
+        // .eq("id", user.uid);
 
-      console.log("Status do upsert:", status);
+      // console.log("Status do upsert:", status);
 
       if (error) throw error;
 
