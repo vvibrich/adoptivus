@@ -95,14 +95,22 @@ export default function ProfilePage() {
 
       const cleanPhone = values.phone.replace(/\D/g, "");
 
-      const { error } = await supabase
+      console.log("Dados do perfil a serem salvos:", {
+        ...values,
+        phone: cleanPhone,
+        updated_at: new Date().toISOString(),
+      });
+
+      const { error, status } = await supabase
         .from("profiles")
-        .update({
+        .upsert({
           ...values,
           phone: cleanPhone,
           updated_at: new Date().toISOString(),
         })
         .eq("id", user.id);
+
+      console.log("Status do upsert:", status);
 
       if (error) throw error;
 
@@ -111,6 +119,7 @@ export default function ProfilePage() {
         description: "Suas informações foram salvas.",
       });
     } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
       toast({
         title: "Erro ao atualizar perfil",
         description: "Ocorreu um erro ao salvar suas informações.",
