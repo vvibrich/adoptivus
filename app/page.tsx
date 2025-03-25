@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
-
+import SupportSection from "@/components/support-section";
 export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
@@ -32,16 +32,16 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-secondary-900">
-              <span className="block mb-2">Encontre seu novo</span>
-              <span className="block text-primary">melhor amigo</span>
+              <span className="block mb-2 ">Encontre seu novo</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 pb-5">melhor amigo</span>
             </h1>
-            <p className="mt-3 max-w-md mx-auto text-base sm:text-lg md:mt-5 md:text-xl md:max-w-3xl text-gray-500">
+            <p className="mt-10 max-w-md mx-auto text-base sm:text-lg md:mt-5 md:text-xl md:max-w-3xl text-gray-500">
               Conectamos pessoas que querem doar pets com aqueles que desejam adotar. 
               Uma plataforma simples e segura para encontrar seu novo companheiro.
             </p>
             <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8 space-y-4 sm:space-y-0 sm:space-x-4 px-4 sm:px-0">
               <Link href="/pets" className="block w-full sm:w-auto">
-                <Button size="lg" className="w-full">
+                <Button size="lg" className="w-full dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-purple-400 dark:to-white border border-white ">
                   Ver Pets Disponíveis
                 </Button>
               </Link>
@@ -121,6 +121,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <SupportSection />
     </div>
   );
 }
