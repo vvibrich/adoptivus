@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PetCard } from "@/components/pet-card";
 
 type Pet = {
   id: string;
