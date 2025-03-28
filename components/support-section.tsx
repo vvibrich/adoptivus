@@ -5,8 +5,36 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { HelpCircle, Mail, MessageSquare, Phone } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
 
 export default function SupportSection() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    message: ""
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const whatsappNumber = "5551981726896";
+    const message = `Olá, sou o ${formData.firstName} ${formData.lastName}, ${formData.message}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id === "first-name" ? "firstName" : 
+       id === "last-name" ? "lastName" : id]: value
+    }));
+  };
+
   return (
     <section className="w-full min-h-screen flex items-center justify-center py-12 md:py-24 lg:py-32 bg-muted/50">
       <div className="container px-4 md:px-6">
@@ -73,7 +101,7 @@ export default function SupportSection() {
 
           <div className="space-y-8">
             <h3 className="text-2xl font-bold">Contate-nos</h3>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label
@@ -82,7 +110,12 @@ export default function SupportSection() {
                   >
                     Nome
                   </label>
-                  <Input id="first-name" placeholder="Digite seu nome" />
+                  <Input 
+                    id="first-name" 
+                    placeholder="Digite seu nome" 
+                    value={formData.firstName}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="space-y-2">
                   <label
@@ -91,7 +124,12 @@ export default function SupportSection() {
                   >
                     Sobrenome
                   </label>
-                  <Input id="last-name" placeholder="Digite seu sobrenome" />
+                  <Input 
+                    id="last-name" 
+                    placeholder="Digite seu sobrenome" 
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
               <div className="space-y-2">
@@ -99,9 +137,15 @@ export default function SupportSection() {
                   htmlFor="email"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                Email
+                  Email
                 </label>
-                <Input id="email" type="email" placeholder="Digite seu email" />
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="Digite seu email" 
+                  value={formData.email}
+                  onChange={handleChange}
+                />
               </div>
               <div className="space-y-2">
                 <label
@@ -110,7 +154,13 @@ export default function SupportSection() {
                 >
                   Mensagem
                 </label>
-                <Textarea id="message" placeholder="Digite sua mensagem" className="min-h-[120px]" />
+                <Textarea 
+                  id="message" 
+                  placeholder="Digite sua mensagem" 
+                  className="min-h-[120px]"
+                  value={formData.message}
+                  onChange={handleChange}
+                />
               </div>
               <Button type="submit" className="w-full">
                 Enviar Mensagem
