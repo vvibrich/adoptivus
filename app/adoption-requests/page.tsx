@@ -13,27 +13,30 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 
+type Profile = {
+  id: string;
+  name?: string | null;
+  full_name?: string | null;
+  whatsapp?: string | null;
+};
+
+type Pet = {
+  id: string;
+  name: string;
+  breed: string | null;
+  description: string;
+  city: string;
+  state: string;
+  created_at: string;
+  species: "dog" | "cat" | "bird" | "other";
+  status: "available" | "adopted";
+  image_url: string | null;
+};
+
 type AdoptionRequest = Database['public']['Tables']['adoption_requests']['Row'] & {
-  pet: {
-    id: string;
-    name: string;
-    breed: string | null;
-    description: string;
-    city: string;
-    state: string;
-    created_at: string;
-    species: "dog" | "cat" | "bird" | "other";
-    status: "available" | "adopted";
-    image_url: string | null;
-  };
-  requester_profile: {
-    full_name: string;
-    whatsapp: string;
-  } | null;
-  owner_profile: {
-    full_name: string;
-    whatsapp: string;
-  } | null;
+  pet: Pet;
+  requester_profile: Profile | null;
+  owner_profile: Profile | null;
 };
 
 export default function AdoptionRequestsPage() {
@@ -99,14 +102,17 @@ export default function AdoptionRequestsPage() {
       // Solicitações recebidas (onde sou o dono do pet)
       const { data: receivedRequestsData } = await supabase
         .from('adoption_requests')
-        .select(`
-          *,
-          pet:pets(*),
-          requester_profile:profiles(requester_id:id, name, whatsapp),
-          owner_profile:profiles(owner_id:id, name, whatsapp)
-        `)
+        .select('*, pet:pets(*)')
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false });
+
+      console.log('receivedRequestsData', receivedRequestsData);
+
+      const requesterIds = (receivedRequestsData ?? []).map(r => r.requester_id);
+      const { data: requesterProfiles } = await supabase
+        .from('profiles')
+        .select('id, full_name, whatsapp')
+        .in('id', requesterIds);
 
       const myRequestsWithDetails = myRequestsData.map(request => ({
         ...request,
@@ -114,7 +120,12 @@ export default function AdoptionRequestsPage() {
         owner_profile: ownersProfiles.find(profile => profile.id === request.owner_id)
       }));
       setMyRequests(myRequestsWithDetails);
-      setReceivedRequests(receivedRequestsData || []);
+
+      const receivedRequestsWithProfiles = (receivedRequestsData ?? []).map(request => ({
+        ...request,
+        requester_profile: requesterProfiles?.find(profile => profile.id === request.requester_id) || null,
+      }));
+      setReceivedRequests(receivedRequestsWithProfiles);
     } catch (error) {
       console.error('Error fetching requests:', error);
       toast({
@@ -198,8 +209,8 @@ export default function AdoptionRequestsPage() {
           </p>
           <p className="text-sm">
             {isReceived
-              ? <>Solicitado por: <span className="font-medium">{request.requester_profile?.full_name || 'Não informado'}</span></>
-              : <>Anunciado por: <span className="font-medium">{request.owner_profile?.full_name || 'Não informado'}</span></>
+              ? <>Solicitado por: <span className="font-medium">{request.requester_profile?.full_name || request.requester_profile?.name || 'Não informado'}</span></>
+              : <>Anunciado por: <span className="font-medium">{request.owner_profile?.full_name || request.owner_profile?.name || 'Não informado'}</span></>
             }
           </p>
           {request.status === 'accepted' && (
