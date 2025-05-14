@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PawPrint, User, Heart, DoorClosed } from "lucide-react";
+import { PawPrint, User, Heart, DoorClosed, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -79,6 +79,12 @@ export function Navbar() {
                       <DropdownMenuItem>
                         <Heart className="mr-2 h-4 w-4" />
                         Meus Pets
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/adoption-requests">
+                      <DropdownMenuItem>
+                        <MessageSquare className="mr-2 h-4 w-4" />
+                        Solicitações
                       </DropdownMenuItem>
                     </Link>
                     <Link href="/profile">

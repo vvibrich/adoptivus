@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PetCard } from "@/components/pet-card";
+import { toast } from "@/hooks/use-toast";
 
 type Pet = {
   id: string;
@@ -40,6 +41,7 @@ type Pet = {
   males_count?: number;
   females_count?: number;
   birth_date?: string;
+  user_id: string;
 };
 
 type PetPhoto = {
@@ -61,6 +63,16 @@ export default function PetsPage() {
   const [cityFilter, setCityFilter] = useState<string | undefined>();
   const [cities, setCities] = useState<string[]>([]);
   const [selectedPet, setSelectedPet] = useState<PetWithPhotos | null>(null);
+  const [hasRequestedOrIsOwner, setHasRequestedOrIsOwner] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [hasRequested, setHasRequested] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+  }, []);
 
   useEffect(() => {
     async function fetchCities() {
@@ -121,6 +133,7 @@ export default function PetsPage() {
 
           return {
             ...pet,
+            owner_id: pet.user_id,
             photos: photos || [],
             currentPhotoIndex: 0,
           };
@@ -137,6 +150,21 @@ export default function PetsPage() {
 
     fetchPets();
   }, [selectedState, cityFilter]);
+
+  useEffect(() => {
+    if (selectedPet && user) {
+      supabase
+        .from('adoption_requests')
+        .select('id')
+        .eq('pet_id', selectedPet.id)
+        .eq('requester_id', user.id)
+        .then(({ data, error }) => {
+          setHasRequested(!!data && data.length > 0);
+        });
+    } else {
+      setHasRequested(false);
+    }
+  }, [selectedPet, user]);
 
   const handleStateChange = (value: string) => {
     setSelectedState(value === "all" ? undefined : value);
@@ -210,6 +238,53 @@ export default function PetsPage() {
       addSuffix: true,
       locale: ptBR,
     });
+  };
+
+  const handleAdoptionRequest = async () => {
+    if (!selectedPet || !user) return;
+    if (selectedPet.user_id === user.id) {
+      toast({
+        title: "Ação não permitida",
+        description: "Você não pode solicitar a adoção do seu próprio pet.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsRequesting(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Usuário não autenticado");
+
+      if (selectedPet.user_id === user.id) {
+        console.log("Ação não permitida: Você não pode solicitar a adoção do seu próprio pet.");
+        return;
+      }
+
+      const { data: requestData, error: requestError } = await supabase
+        .from('adoption_requests')
+        .insert([
+          {
+            pet_id: selectedPet.id,
+            requester_id: user.id,
+            owner_id: selectedPet.user_id,
+            status: 'pending',
+          },
+        ])
+        .select();
+
+      if (requestError) throw requestError;
+
+      toast({
+        title: "Solicitação enviada!",
+        description: "Sua solicitação de adoção foi registrada com sucesso.",
+        variant: "default",
+      });
+      setHasRequested(true);
+    } catch (error) {
+      console.error('Error requesting adoption:', error);
+    } finally {
+      setIsRequesting(false);
+    }
   };
 
   if (isLoading) {
@@ -474,15 +549,26 @@ export default function PetsPage() {
                       </p>
                     </div>
 
-                    <a 
-                      href={`https://wa.me/55${selectedPet.contact_whatsapp}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                    >
-                      <Button className="w-full" size="lg">
-                        Entrar em Contato
+                    {selectedPet && user && selectedPet.user_id !== user.id && !hasRequested && (
+                      <Button
+                        className="w-full"
+                        size="lg"
+                        onClick={handleAdoptionRequest}
+                        disabled={isRequesting}
+                      >
+                        {isRequesting ? "Enviando solicitação..." : "Solicitar Adoção"}
                       </Button>
-                    </a>
+                    )}
+                    {selectedPet && user && selectedPet.user_id === user.id && (
+                      <p className="text-sm text-muted-foreground text-center mt-2">
+                        Você não pode solicitar a adoção do seu próprio pet.
+                      </p>
+                    )}
+                    {selectedPet && user && selectedPet.user_id !== user.id && hasRequested && (
+                      <p className="text-sm text-muted-foreground text-center mt-2">
+                        Você já solicitou a adoção deste pet.
+                      </p>
+                    )}
                   </div>
                 </div>
               </>
