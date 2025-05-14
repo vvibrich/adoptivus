@@ -366,13 +366,20 @@ export default function PetsPage() {
         )}
 
         <Dialog open={!!selectedPet} onOpenChange={() => setSelectedPet(null)}>
-          <DialogContent className="max-w-3xl">
+          <DialogContent className="max-w-[90vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto rounded-lg p-4 sm:p-8">
             {selectedPet && (
               <>
+                <button
+                  className="absolute top-2 right-2 z-10 text-2xl text-muted-foreground bg-background rounded-full p-1 shadow-md sm:hidden"
+                  onClick={() => setSelectedPet(null)}
+                  aria-label="Fechar"
+                >
+                  ×
+                </button>
                 <DialogHeader>
-                  <DialogTitle className="text-2xl">{selectedPet.name}</DialogTitle>
+                  <DialogTitle className="text-xl sm:text-2xl">{selectedPet.name}</DialogTitle>
                 </DialogHeader>
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
                   {selectedPet.photos.length > 0 && (
                     <div className="aspect-square relative">
                       <img
