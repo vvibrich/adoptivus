@@ -140,8 +140,8 @@ export default function AdoptionRequestsPage() {
 
   const getStatusBadge = (status: string) => {
     const variants = {
-      pending: "warning",
-      accepted: "success",
+      pending: "outline",
+      accepted: "default",
       rejected: "destructive",
     } as const;
 
