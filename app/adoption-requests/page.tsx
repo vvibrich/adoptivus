@@ -14,13 +14,24 @@ import { ptBR } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 
 type AdoptionRequest = Database['public']['Tables']['adoption_requests']['Row'] & {
-  pet: Database['public']['Tables']['pets']['Row'];
-  requester_profile: {
+  pet: {
+    id: string;
     name: string;
+    breed: string | null;
+    description: string;
+    city: string;
+    state: string;
+    created_at: string;
+    species: "dog" | "cat" | "bird" | "other";
+    status: "available" | "adopted";
+    image_url: string | null;
+  };
+  requester_profile: {
+    full_name: string;
     whatsapp: string;
   } | null;
   owner_profile: {
-    name: string;
+    full_name: string;
     whatsapp: string;
   } | null;
 };
@@ -32,6 +43,9 @@ export default function AdoptionRequestsPage() {
   // const supabase = createClientComponentClient<Database>();
   const { toast } = useToast();
   const router = useRouter();
+  useEffect(() => {
+    console.log('myRequests', myRequests);
+  }, [myRequests]);
 
   useEffect(() => {
     fetchRequests();
