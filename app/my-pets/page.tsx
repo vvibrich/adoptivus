@@ -50,7 +50,7 @@ export default function MyPetsPage() {
   async function loadPets() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
+      console.log('user', user);
       if (!user) {
         router.push("/login");
         return;

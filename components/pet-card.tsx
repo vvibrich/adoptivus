@@ -5,6 +5,9 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 type Pet = {
     id: string;
@@ -22,31 +25,35 @@ type Pet = {
     males_count?: number;
     females_count?: number;
     birth_date?: string;
-  };
+    owner_id: string;
+};
 
-  type PetWithPhotos = Pet & {
+type PetWithPhotos = Pet & {
     photos: PetPhoto[];
     currentPhotoIndex: number;
-  };
+};
 
-  type PetPhoto = {
+type PetPhoto = {
     id: string;
     pet_id: string;
     url: string;
     order: number;
-  };
+};
 
 export function PetCard({...props}: PetWithPhotos){
-
     const [pets, setPets] = useState<PetWithPhotos[]>([]);
     const [selectedPet, setSelectedPet] = useState<PetWithPhotos | null>(null);
+    const [isRequesting, setIsRequesting] = useState(false);
+    const supabase = createClientComponentClient();
+    const { toast } = useToast();
+    const router = useRouter();
 
     const speciesMap = {
         dog: "Cachorro",
         cat: "Gato",
         bird: "Pássaro",
         other: "Outro",
-      };
+    };
 
     const previousPhoto = (petId: string) => {
         setPets(prev => prev.map(p => {
@@ -74,9 +81,9 @@ export function PetCard({...props}: PetWithPhotos){
             return { ...prev, currentPhotoIndex: newIndex };
           });
         }
-      };
+    };
 
-      const handlePhotoClick = (petId: string, index: number) => {
+    const handlePhotoClick = (petId: string, index: number) => {
         setPets(prev => prev.map(p => {
           if (p.id === petId) {
             return { ...p, currentPhotoIndex: index };
@@ -90,14 +97,68 @@ export function PetCard({...props}: PetWithPhotos){
             return { ...prev, currentPhotoIndex: index };
           });
         }
-      };
+    };
 
-      const formatDate = (date: string) => {
+    const formatDate = (date: string) => {
         return formatDistanceToNow(new Date(date), {
           addSuffix: true,
           locale: ptBR,
         });
-      };
+    };
+
+    const handleAdoptionRequest = async () => {
+        try {
+            setIsRequesting(true);
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (!user) {
+                toast({
+                    title: "Erro",
+                    description: "Você precisa estar logado para solicitar uma adoção.",
+                    variant: "destructive",
+                });
+                router.push('/login');
+                return;
+            }
+
+            if (user.id === props.owner_id) {
+                toast({
+                    title: "Erro",
+                    description: "Você não pode solicitar a adoção do seu próprio pet.",
+                    variant: "destructive",
+                });
+                return;
+            }
+
+            const { error } = await supabase
+                .from('adoption_requests')
+                .insert({
+                    pet_id: props.id,
+                    requester_id: user.id,
+                    owner_id: props.owner_id,
+                    status: 'pending'
+                });
+
+            if (error) throw error;
+
+            toast({
+                title: "Sucesso",
+                description: "Solicitação de adoção enviada com sucesso!",
+            });
+
+            setSelectedPet(null);
+            router.push('/adoption-requests');
+        } catch (error) {
+            console.error('Error creating adoption request:', error);
+            toast({
+                title: "Erro",
+                description: "Não foi possível enviar a solicitação de adoção.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsRequesting(false);
+        }
+    };
 
     return (
         <>
@@ -272,15 +333,14 @@ export function PetCard({...props}: PetWithPhotos){
                             </p>
                             </div>
         
-                            <a 
-                            href={`https://wa.me/55${selectedPet.contact_whatsapp}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
+                            <Button 
+                                className="w-full" 
+                                size="lg"
+                                onClick={handleAdoptionRequest}
+                                disabled={isRequesting}
                             >
-                            <Button className="w-full" size="lg">
-                                Entrar em Contato
+                                {isRequesting ? "Enviando solicitação..." : "Solicitar Adoção"}
                             </Button>
-                            </a>
                         </div>
                         </div>
                     </>
