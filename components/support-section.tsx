@@ -36,7 +36,7 @@ export default function SupportSection() {
   };
 
   return (
-    <section className="w-full min-h-screen flex items-center justify-center py-12 md:py-24 lg:py-32 bg-muted/50">
+    <section className="w-full min-h-screen flex items-center justify-center py-12 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
@@ -207,8 +207,8 @@ export default function SupportSection() {
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
                   <CardDescription>
-                    <Button variant="outline" size="sm" className="w-full">
-                      <Link href="https://wa.me/5551981726896" className="text-primary">
+                    <Button variant="outline" size="sm" className="w-full hover:bg-secondary hover:text-dark">
+                      <Link href="https://wa.me/5551981726896">
                         Iniciar Conversa
                       </Link>
                     </Button>

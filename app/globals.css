@@ -18,57 +18,62 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --background: 36 100% 97%; /* #FFF8F0 - creme */
+    --foreground: 0 0% 20%; /* #333333 - cinza escuro */
+    --card: 36 100% 97%; /* #FFF8F0 - creme */
+    --card-foreground: 0 0% 20%; /* #333333 - cinza escuro */
+    --popover: 36 100% 97%; /* #FFF8F0 - creme */
+    --popover-foreground: 0 0% 20%; /* #333333 - cinza escuro */
+    --primary: 0 100% 71%; /* #FF6B6B - coral avermelhado */
+    --primary-foreground: 0 0% 20%; /* #333333 - cinza escuro */
+    --secondary: 48 100% 62%; /* #FFD93D - amarelo vibrante */
+    --secondary-foreground: 0 0% 20%;
+    --muted: 0 0% 67%; /* #AAAAAA - cinza de apoio */
+    --muted-foreground: 0 0% 45.1%; /* #666666 - cinza de apoio */
+    --accent: 48 100% 62%; /* #FFD93D - amarelo vibrante */
+    --accent-foreground: 0 0% 20%; /* #333333 - cinza escuro */
+    --destructive: 0 84.2% 60.2%; /* #FF6B6B - coral avermelhado */
+    --destructive-foreground: 0 0% 98%; /* #FFFFFF - branco */
+    --success: 122 39% 49%; /* #4CAF50 - verde de sucesso */
+    --success-foreground: 0 0% 98%;
+    --border: 0 0% 67%; /* #AAAAAA - cinza de apoio */
+    --input: 0 0% 67%; /* #AAAAAA - cinza de apoio */
+    --ring: 0 100% 71%; /* #FF6B6B - coral avermelhado */
+    --chart-1: 12 76% 61%; /* #4CAF50 - verde de sucesso */
+    --chart-2: 173 58% 39%; /* #4CAF50 - verde de sucesso */
+    --chart-3: 197 37% 24%; /* #4CAF50 - verde de sucesso */
+    --chart-4: 43 74% 66%; /* #4CAF50 - verde de sucesso */
+    --chart-5: 27 87% 67%; /* #4CAF50 - verde de sucesso */
     --radius: 0.5rem;
+    --dark: 0 0% 10%; /* preto escuro */
   }
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background: 240 20% 14%; /* #1C1C2E - azul petróleo escuro */
+    --foreground: 0 0% 95%; /* #F1F1F1 - cinza claro */
+    --card: 240 20% 18%; /* #2B2B40 - cinza azulado escuro */
+    --card-foreground: 0 0% 95%; /* #F1F1F1 - cinza claro */
+    --popover: 240 20% 18%; /* #2B2B40 - cinza azulado escuro */
+    --popover-foreground: 0 0% 95%; /* #F1F1F1 - cinza claro */
+    --primary: 0 100% 71%; /* #FF6B6B - coral neon */
+    --primary-foreground: 0 0% 95%;
+    --secondary: 0 100% 71%; /* #FF6B6B - para bordas e texto */
+    --secondary-foreground: 0 100% 71%;
+    --muted: 0 0% 80%; /* #CCCCCC - cinza médio */
+    --muted-foreground: 0 0% 80%; /* #CCCCCC - cinza médio */
+    --accent: 48 100% 62%; /* #FFD93D - amarelo vibrante */
+    --accent-foreground: 0 0% 95%; /* #F1F1F1 - cinza claro */
+    --destructive: 0 84.2% 60.2%; /* #FF6B6B - coral avermelhado */
+    --destructive-foreground: 0 0% 98%; /* #FFFFFF - branco */
+    --success: 120 31% 65%; /* #81C784 - verde limão suave */
+    --success-foreground: 0 0% 95%; /* #F1F1F1 - cinza claro */
+    --border: 240 20% 33%; /* #3A3A55 - cinza chumbo claro */
+    --input: 240 20% 33%; /* #3A3A55 - cinza chumbo claro */
+    --ring: 0 100% 71%; /* #FF6B6B - coral neon */
+    --chart-1: 0 100% 71%; /* #FF6B6B - coral neon */
+    --chart-2: 48 100% 62%; /* #FFD93D - amarelo vibrante */
+    --chart-3: 120 31% 65%; /* #81C784 - verde limão suave */
+    --chart-4: 240 20% 33%; /* #3A3A55 - cinza chumbo claro */
+    --chart-5: 0 0% 80%; /* #CCCCCC - cinza médio */
   }
 }
 

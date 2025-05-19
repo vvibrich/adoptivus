@@ -294,7 +294,7 @@ export default function PetsPage() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <h1 className="text-2xl sm:text-3xl font-bold">Pets Disponíveis para Adoção</h1>
             <Link href="/pets/new">
-              <Button>Doar um Pet</Button>
+              <Button className="bg-primary text-white hover:bg-primary/80">Doar um Pet</Button>
             </Link>
           </div>
           <div className="text-center py-12">
@@ -311,7 +311,7 @@ export default function PetsPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <h1 className="text-2xl sm:text-3xl font-bold">Pets Disponíveis para Adoção</h1>
           <Link href="/pets/new">
-            <Button>Doar um Pet</Button>
+            <Button className="bg-primary text-white hover:bg-primary/80">Doar um Pet</Button>
           </Link>
         </div>
 
@@ -325,9 +325,9 @@ export default function PetsPage() {
                 <SelectValue placeholder="Filtrar por estado" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos os estados</SelectItem>
+                <SelectItem value="all" className="cursor-pointer hover:bg-secondary hover:!text-dark">Todos os estados</SelectItem>
                 {states.map((state) => (
-                  <SelectItem key={state.uf} value={state.uf}>
+                  <SelectItem key={state.uf} value={state.uf} className="cursor-pointer hover:bg-secondary hover:!text-dark">
                     {state.name}
                   </SelectItem>
                 ))}
@@ -512,13 +512,13 @@ export default function PetsPage() {
                       <div className="mb-6">
                         <h3 className="text-lg font-semibold mb-3">Informações da Ninhada</h3>
                         <div className="grid grid-cols-2 gap-4">
-                          <div className="bg-muted p-3 rounded">
-                            <p className="text-sm text-muted-foreground">Total de filhotes</p>
-                            <p className="text-lg font-medium">{selectedPet.litter_size}</p>
+                          <div className="p-3 rounded bg-primary">
+                            <p className="text-sm text-white">Total de filhotes</p>
+                            <p className="text-lg font-medium text-white">{selectedPet.litter_size}</p>
                           </div>
-                          <div className="bg-muted p-3 rounded">
-                            <p className="text-sm text-muted-foreground">Disponíveis</p>
-                            <p className="text-lg font-medium">
+                          <div className="p-3 rounded bg-primary">
+                            <p className="text-sm text-white">Disponíveis</p>
+                            <p className="text-lg font-medium text-white">
                               {selectedPet.males_count} machos, {selectedPet.females_count} fêmeas
                             </p>
                           </div>
@@ -551,7 +551,7 @@ export default function PetsPage() {
 
                     {selectedPet && user && selectedPet.user_id !== user.id && !hasRequested && (
                       <Button
-                        className="w-full"
+                        className="w-full bg-primary text-white"
                         size="lg"
                         onClick={handleAdoptionRequest}
                         disabled={isRequesting}

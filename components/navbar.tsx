@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { PawPrint, User, Heart, DoorClosed, MessageSquare } from "lucide-react";
+import { User, Heart, DoorClosed, MessageSquare } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -49,8 +50,14 @@ export function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <PawPrint className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-              <span className="ml-2 text-lg sm:text-xl font-bold text-primary">Adoptivus</span>
+              <Image
+                src="/logo.png"
+                alt="Adoptivus Logo"
+                width={42}
+                height={42}
+                className="text-primary"
+              />
+              <span className="text-lg sm:text-xl font-bold text-foreground">Petiscoo</span>
             </Link>
           </div>
 
@@ -59,41 +66,41 @@ export function Navbar() {
             {user ? (
               <>
                 <Link href="/pets/new" className="hidden sm:block">
-                  <Button>Doar Pet</Button>
+                  <Button className="bg-primary text-white hover:bg-primary/80">Doar Pet</Button>
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger className="focus:outline-none">
-                    <Avatar className="h-8 w-8 bg-primary text-primary-foreground">
-                      <AvatarFallback className="dark:text-white text-black">
+                    <Avatar className="h-10 w-10 bg-primary text-secondary">
+                      <AvatarFallback className="dark:bg-secondary bg-primary text-white">
                         {getUserInitial(user.email)}
                       </AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <Link href="/pets/new" className="sm:hidden">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer hover:bg-secondary hover:!text-dark">
                         Doar Pet
                       </DropdownMenuItem>
                     </Link>
                     <Link href="/my-pets">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer hover:bg-secondary hover:!text-dark">
                         <Heart className="mr-2 h-4 w-4" />
                         Meus Pets
                       </DropdownMenuItem>
                     </Link>
                     <Link href="/adoption-requests">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer hover:bg-secondary hover:!text-dark">
                         <MessageSquare className="mr-2 h-4 w-4" />
                         Solicitações
                       </DropdownMenuItem>
                     </Link>
                     <Link href="/profile">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer hover:bg-secondary hover:!text-dark">
                         <User className="mr-2 h-4 w-4" />
                         Perfil
                       </DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-red-400">
+                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer hover:bg-red-400 hover:!text-dark">
                       <DoorClosed className="mr-2 h4 w-4" />
                       Sair
                     </DropdownMenuItem>
@@ -102,7 +109,7 @@ export function Navbar() {
               </>
             ) : (
               <Link href="/login">
-                <Button>Entrar</Button>
+                <Button className="bg-primary text-white hover:bg-primary/80">Entrar</Button>
               </Link>
             )}
           </div>

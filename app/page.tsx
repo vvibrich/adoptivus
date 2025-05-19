@@ -28,12 +28,12 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-12 md:py-20 bg-gradient-to-r from-primary/10 to-primary/5">
+      <section className="relative py-12 md:py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-secondary-900">
               <span className="block mb-2 ">Encontre seu novo</span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 pb-5">melhor amigo</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#FFD93D] to-[#FF6B6B] pb-5">melhor amigo</span>
             </h1>
             <p className="mt-10 max-w-md mx-auto text-base sm:text-lg md:mt-5 md:text-xl md:max-w-3xl text-gray-500">
               Conectamos pessoas que querem doar pets com aqueles que desejam adotar. 
@@ -41,14 +41,14 @@ export default function Home() {
             </p>
             <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8 space-y-4 sm:space-y-0 sm:space-x-4 px-4 sm:px-0">
               <Link href="/pets" className="block w-full sm:w-auto">
-                <Button size="lg" className="w-full dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-purple-400 dark:to-white border border-white ">
+                <Button size="lg" className="w-full text-white dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r from-[#FFD93D] to-[#FF6B6B] border border-white ">
                   Ver Pets Disponíveis
                 </Button>
               </Link>
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="w-full sm:w-auto" 
+                className="w-full sm:w-auto hover:bg-secondary hover:text-dark" 
                 onClick={handleDonate}
               >
                 Doar um Pet
@@ -74,7 +74,7 @@ export default function Home() {
                 <div className="flow-root h-full rounded-lg bg-gray-50 px-6 pb-8">
                   <div className="-mt-6">
                     <div className="inline-flex items-center justify-center rounded-md bg-primary p-3 shadow-lg">
-                      <PawPrint className="h-6 w-6 text-secondary" />
+                      <PawPrint className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">
                       Cadastre seu Pet
@@ -90,7 +90,7 @@ export default function Home() {
                 <div className="flow-root h-full rounded-lg bg-gray-50 px-6 pb-8">
                   <div className="-mt-6">
                     <div className="inline-flex items-center justify-center rounded-md bg-primary p-3 shadow-lg">
-                      <Heart className="h-6 w-6 text-secondary" />
+                      <Heart className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">
                       Encontre um Match
@@ -106,7 +106,7 @@ export default function Home() {
                 <div className="flow-root h-full rounded-lg bg-gray-50 px-6 pb-8">
                   <div className="-mt-6">
                     <div className="inline-flex items-center justify-center rounded-md bg-primary p-3 shadow-lg">
-                      <Users className="h-6 w-6 text-secondary" />
+                      <Users className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">
                       Faça a Conexão

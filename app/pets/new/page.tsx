@@ -230,14 +230,14 @@ export default function NewPetPage() {
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecione uma espécie" />
+                            <SelectValue placeholder="Selecione uma espécie" className="hover:bg-secondary hover:!text-dark" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="dog">Cachorro</SelectItem>
-                          <SelectItem value="cat">Gato</SelectItem>
-                          <SelectItem value="bird">Pássaro</SelectItem>
-                          <SelectItem value="other">Outro</SelectItem>
+                          <SelectItem value="dog" className="cursor-pointer hover:bg-secondary hover:!text-dark">Cachorro</SelectItem>
+                          <SelectItem value="cat" className="cursor-pointer hover:bg-secondary hover:!text-dark">Gato</SelectItem>
+                          <SelectItem value="bird" className="cursor-pointer hover:bg-secondary hover:!text-dark">Pássaro</SelectItem>
+                          <SelectItem value="other" className="cursor-pointer hover:bg-secondary hover:!text-dark">Outro</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -288,12 +288,12 @@ export default function NewPetPage() {
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecione o estado" />
+                            <SelectValue placeholder="Selecione o estado" className="hover:bg-secondary hover:!text-dark" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {states.map((state) => (
-                            <SelectItem key={state.uf} value={state.uf}>
+                            <SelectItem key={state.uf} value={state.uf} className="cursor-pointer hover:bg-secondary hover:!text-dark">
                               {state.name}
                             </SelectItem>
                           ))}
@@ -484,7 +484,7 @@ export default function NewPetPage() {
                 <Button 
                   type="submit" 
                   disabled={isUploading}
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto bg-primary text-white hover:bg-primary/80"
                 >
                   {isUploading ? "Enviando..." : "Cadastrar Pet"}
                 </Button>

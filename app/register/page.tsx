@@ -222,7 +222,7 @@ export default function RegisterPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-primary text-white hover:bg-primary/80" disabled={isLoading}>
                 {isLoading ? "Criando conta..." : "Criar Conta"}
               </Button>
             </form>

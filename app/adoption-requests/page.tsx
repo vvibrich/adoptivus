@@ -256,7 +256,7 @@ export default function AdoptionRequestsPage() {
       <h1 className="text-3xl font-bold mb-8">Solicitações de Adoção</h1>
       
       <Tabs defaultValue="my-requests" className="space-y-4">
-        <TabsList>
+        <TabsList className="bg-secondary text-dark" >
           <TabsTrigger value="my-requests">Minhas Solicitações</TabsTrigger>
           <TabsTrigger value="received-requests">Solicitações Recebidas</TabsTrigger>
         </TabsList>

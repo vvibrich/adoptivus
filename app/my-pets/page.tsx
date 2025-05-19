@@ -151,7 +151,7 @@ export default function MyPetsPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <h1 className="text-2xl sm:text-3xl font-bold">Meus Pets</h1>
           <Link href="/pets/new">
-            <Button>Cadastrar Novo Pet</Button>
+            <Button className="bg-primary text-white hover:bg-primary/80">Cadastrar Novo Pet</Button>
           </Link>
         </div>
 
@@ -161,7 +161,7 @@ export default function MyPetsPage() {
               Você ainda não cadastrou nenhum pet para doação
             </p>
             <Link href="/pets/new">
-              <Button>Cadastrar Primeiro Pet</Button>
+              <Button className="bg-primary text-white hover:bg-primary/80">Cadastrar Primeiro Pet</Button>
             </Link>
           </div>
         ) : (
