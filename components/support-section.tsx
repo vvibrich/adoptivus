@@ -60,13 +60,13 @@ export default function SupportSection() {
               <AccordionItem value="item-2">
                 <AccordionTrigger>Quanto custa?</AccordionTrigger>
                 <AccordionContent>
-                  O Adoptivus é uma plataforma gratuita. Você pode cadastrar animais, buscar por animais, ver os detalhes de cada animal e entrar em contato com o responsável pela adoção.
+                  O Petiscoo é uma plataforma gratuita. Você pode cadastrar animais, buscar por animais, ver os detalhes de cada animal e entrar em contato com o responsável pela adoção.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3">
                 <AccordionTrigger>O site é seguro?</AccordionTrigger>
                 <AccordionContent>
-                  Sim, o Adoptivus é uma plataforma segura e confiável. Todos os dados são criptografados e armazenados de forma segura.
+                  Sim, o Petiscoo é uma plataforma segura e confiável. Todos os dados são criptografados e armazenados de forma segura.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-4">

@@ -9,7 +9,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Adoptivus - Encontre seu novo amigo',
+  title: 'Petiscoo - Encontre seu novo amigo',
   description: 'Plataforma de adoção de pets',
 };
 

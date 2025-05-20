@@ -52,7 +52,7 @@ export function Navbar() {
             <Link href="/" className="flex items-center">
               <Image
                 src="/logo.png"
-                alt="Adoptivus Logo"
+                alt="Petiscoo Logo"
                 width={42}
                 height={42}
                 className="text-primary"
